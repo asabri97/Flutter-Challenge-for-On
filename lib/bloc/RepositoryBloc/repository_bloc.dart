@@ -63,6 +63,7 @@ class RepositoryBloc extends Bloc<RepositoryEvent, RepositoryState> {
     try {
       final repositories =
           await repositoryRepository.searchRepositories(event.query);
+
       emit(RepositoryLoaded(repositories, 1, repositories.isNotEmpty));
     } catch (e) {
       emit(const RepositoryError("Failed to refresh repositories"));

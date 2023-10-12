@@ -81,7 +81,14 @@ class RepositorySearchScreenState extends State<RepositorySearchScreen> {
                 final repositories = (state is RepositoryLoaded)
                     ? state.repositories
                     : (state as RepositoryLoadingNextPage).repositories;
-
+                if (repositories.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'No repositories found',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  );
+                }
                 return RefreshIndicator(
                   onRefresh: _onRefresh,
                   child: ListView.separated(
@@ -136,8 +143,7 @@ class RepositorySearchScreenState extends State<RepositorySearchScreen> {
                   ),
                 );
               }
-              return const SizedBox
-                  .shrink(); // Return an empty widget if none of the above states match
+              return const SizedBox.shrink();
             },
           )),
         ],
