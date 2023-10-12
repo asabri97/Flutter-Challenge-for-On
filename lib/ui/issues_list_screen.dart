@@ -7,6 +7,7 @@ import 'package:github_repos/model/repository.dart';
 import 'package:github_repos/repository/repository.dart';
 import 'package:intl/intl.dart';
 
+/// [IssueListScreen] displays a list of issues for a particular repository.
 class IssueListScreen extends StatefulWidget {
   final Repository repository;
 
@@ -43,63 +44,74 @@ class IssueListScreenState extends State<IssueListScreen> {
         title: Text('${widget.repository.name} Issues'),
       ),
       body: BlocProvider(
-          create: (context) => _issuesBloc,
-          child: BlocBuilder<IssuesBloc, IssuesState>(
-            builder: (context, state) {
-              if (state is IssuesLoaded) {
-                if (state.issues.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      'No open issues found',
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                    ),
-                  );
-                } else {
-                  return RefreshIndicator(
-                    onRefresh: _onRefresh,
-                    child: ListView.separated(
-                      separatorBuilder: (context, index) {
-                        return const Divider(
-                          color: Colors.white,
-                        );
-                      },
-                      controller: _scrollController,
-                      itemCount: state.issues.length,
-                      itemBuilder: (context, index) {
-                        final issue = state.issues[index];
-                        return ListTile(
-                          title: Text(
-                            issue.title,
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                          subtitle: Padding(
-                            padding: const EdgeInsets.only(top: 5.0),
-                            child: Text(
-                              formatDateString(issue.createdAt),
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                }
-              } else if (state is IssuesError) {
-                return const Center(
-                  child: Text(
-                    'Error loading issues',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                );
-              } else {
-                // Loading state or any other state handling can go here
-                return const Center(
-                  child: CircularProgressIndicator(color: Colors.white),
-                );
-              }
-            },
-          )),
+        create: (context) => _issuesBloc,
+        child: BlocBuilder<IssuesBloc, IssuesState>(
+          builder: (context, state) {
+            return _buildBodyBasedOnState(state);
+          },
+        ),
+      ),
     );
+  }
+
+  /// Builds the widget tree based on the provided [state].
+  Widget _buildBodyBasedOnState(IssuesState state) {
+    if (state is IssuesLoaded) {
+      return _buildIssuesList(state);
+    } else if (state is IssuesError) {
+      return const Center(
+        child: Text(
+          'Error loading issues',
+          style: TextStyle(color: Colors.white, fontSize: 18),
+        ),
+      );
+    } else {
+      // Loading state or any other state handling can go here
+      return const Center(
+        child: CircularProgressIndicator(color: Colors.white),
+      );
+    }
+  }
+
+  /// Builds a list of issues based on the provided [state].
+  Widget _buildIssuesList(IssuesLoaded state) {
+    if (state.issues.isEmpty) {
+      return const Center(
+        child: Text(
+          'No open issues found',
+          style: TextStyle(color: Colors.white, fontSize: 18),
+        ),
+      );
+    } else {
+      return RefreshIndicator(
+        onRefresh: _onRefresh,
+        child: ListView.separated(
+          separatorBuilder: (context, index) {
+            return const Divider(
+              color: Colors.white,
+            );
+          },
+          controller: _scrollController,
+          itemCount: state.issues.length,
+          itemBuilder: (context, index) {
+            final issue = state.issues[index];
+            return ListTile(
+              title: Text(
+                issue.title,
+                style: const TextStyle(color: Colors.white),
+              ),
+              subtitle: Padding(
+                padding: const EdgeInsets.only(top: 5.0),
+                child: Text(
+                  _formatDateString(issue.createdAt),
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    }
   }
 
   Future<void> _onRefresh() async {
@@ -128,9 +140,10 @@ class IssueListScreenState extends State<IssueListScreen> {
     super.dispose();
   }
 
-  String formatDateString(String inputString) {
+  /// Formats a date string into a more readable format.
+  String _formatDateString(String inputString) {
     DateTime parsedDateTime = DateTime.parse(inputString);
-    DateFormat desiredFormat = DateFormat('dd MMM yyyy H:mm');
+    DateFormat desiredFormat = DateFormat('dd MMM yyyy H:mm a');
     String formattedDate = desiredFormat.format(parsedDateTime);
     return formattedDate;
   }
