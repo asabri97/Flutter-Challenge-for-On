@@ -1,16 +1,27 @@
-# github_repos
+# GitHub Repository Searcher
 
-A new Flutter project.
+A simple Flutter application to search GitHub repositories and view their open issues.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- Search for repositories by name (triggered after 4th letter)
+- View repositories in a list, sorted alphabetically
+- Pull to refresh functionality
+- Pagination in the results list
+- View open issues of a repository in a detailed page
 
-A few resources to get you started if this is your first Flutter project:
+## Setup
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+1. **Clone the Repo**
+git clone https://github.com/your_username/github_repos.git
+2. **Get Dependencies**
+flutter pub get
+3. **Run the App**
+flutter run
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+
+## Running Tests
+
+Execute tests with:
+flutter test
