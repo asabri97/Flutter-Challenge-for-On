@@ -12,11 +12,11 @@ A simple Flutter application to search GitHub repositories and view their open i
 
 ## Setup
 
-1. **Clone the Repo**
-git clone https://github.com/your_username/github_repos.git
-2. **Get Dependencies**
+1. **Clone the Repo**:
+git clone https://github.com/asabri97/flutter_on_repos.git
+2. **Get Dependencies**:
 flutter pub get
-3. **Run the App**
+3. **Run the App**:
 flutter run
 
 
